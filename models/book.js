@@ -57,7 +57,11 @@ const bookSchema = new mongoose.Schema(
       required: [true, 'A book must have an image'],
     },
   },
-  { timestamps: true }
+  {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+    timestamps: true,
+  }
 );
 
 //create User Model

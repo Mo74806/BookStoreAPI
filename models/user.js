@@ -62,7 +62,11 @@ const userSchema = new mongoose.Schema(
     passwordResetToken: String,
     PasswordResetExpires: Date,
   },
-  { timestamps: true }
+  {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+    timestamps: true,
+  }
 );
 
 //pre save middleware to hash the basword
