@@ -5,9 +5,13 @@ const authController = require('./../controllers/authController');
 const router = express.Router();
 
 router.use(authController.protect);
+router
+  .route('/createSession/:purchaseId')
+  .get(purchaseController.getCheckoutSession);
 
 router.route('/').get(purchaseController.getAllPurchases).post(
-  // authController.restrictTo('user'),
+  // authController.restrictTo('user')
+  purchaseController.setTheBuyer,
   purchaseController.createPurchase
 );
 
@@ -15,11 +19,11 @@ router
   .route('/:id')
   .get(purchaseController.getPurchase)
   .patch(
-    authController.restrictTo('user', 'admin'),
+    // authController.restrictTo('user', 'admin'),
     purchaseController.updatePurchase
   )
   .delete(
-    authController.restrictTo('user', 'admin'),
+    // authController.restrictTo('user', 'admin'),
     purchaseController.deletePurchase
   );
 

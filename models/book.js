@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+const Author = require('./author');
 
 //book schema
 const bookSchema = new mongoose.Schema(
@@ -18,8 +19,10 @@ const bookSchema = new mongoose.Schema(
       default: 0,
     },
     author: {
-      type: String,
-      required: [true, 'A book must have an author'],
+      type: mongoose.Schema.ObjectId,
+      ref: 'Author',
+
+      // required: [true, 'A book must have an author'],
     },
     fullDescription: {
       type: String,
@@ -56,6 +59,9 @@ const bookSchema = new mongoose.Schema(
       type: String,
       required: [true, 'A book must have an image'],
     },
+    qty: {
+      type: Number,
+    },
   },
   {
     toJSON: { virtuals: true },
@@ -64,6 +70,32 @@ const bookSchema = new mongoose.Schema(
   }
 );
 
+bookSchema.virtual('reviews', {
+  ref: 'Review',
+  foreignField: 'book',
+  localField: '_id',
+});
+
+bookSchema.pre('save', async function (next) {
+  console.log(this.author);
+  const author = await Author.findByIdAndUpdate(this.author, {
+    $push: { books: this.id },
+  });
+  // console.log(author);
+  next();
+});
+
+bookSchema.pre('findByIdAndDelete', async function (next) {
+  console.log(this.author);
+  const author = await Author.findById(this.author);
+  if (author) {
+    let books = author.books;
+    books.filter((book) => book.id != this.id);
+    await Author.findById(this.author, { books });
+  }
+  next();
+});
+
 //create User Model
-const Book = mongoose.model('book', bookSchema);
+const Book = mongoose.model('Book', bookSchema);
 module.exports = Book;

@@ -4,8 +4,10 @@ const factory = require('./handlerFactory');
 
 exports.setBookUserIds = (req, res, next) => {
   // Allow nested routes
+  console.log(req.body.book);
   if (!req.body.book) req.body.book = req.params.bookId;
   if (!req.body.user) req.body.user = req.user.id;
+
   next();
 };
 

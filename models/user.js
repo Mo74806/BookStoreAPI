@@ -123,5 +123,5 @@ userSchema.pre('save', function (next) {
 });
 
 //create User Model
-const User = mongoose.model('user', userSchema);
+const User = mongoose.model('User', userSchema);
 module.exports = User;

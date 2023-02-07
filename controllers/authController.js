@@ -51,12 +51,15 @@ exports.signup = catchAsync(async (req, res, next) => {
     role: req.body.role,
   });
 
+  console.log(newUser);
+
   createSendToken(newUser, 201, res);
 });
 
 exports.login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
-
+  console.log('loging in ........');
+  console.log(email, password);
   // 1) Check if email and password exist
   if (!email || !password) {
     return next(new AppError('Please provide email and password!', 400));
@@ -83,13 +86,22 @@ exports.restrictTo = (...roles) => {
 };
 exports.protect = catchAsync(async (req, res, next) => {
   // 1) Getting token and check of it's there
-  let token = req.headers?.jwt;
-  // let token = req.params?.jwt;
+  let token;
+
+  // console.log(req.headers.token);
+  // console.log(req.cookies.token);
+  // let token;
+  // req.headers.authorization = req.body?.token;
+  // console.log(req.headers.authorization);
+  // req.params.token = null;
+  console.log(req.headers.authorization);
+
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith('Bearer')
   ) {
     token = req.headers.authorization.split(' ')[1];
+    console.log(token);
   }
 
   if (!token) {

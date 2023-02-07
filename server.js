@@ -1,9 +1,10 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+dotenv.config({ path: './config.env' });
+
 // const path = require('path');
 const AppError = require('./utils/appError');
 
-dotenv.config({ path: './config.env' });
 const app = require('./app');
 
 // console.log(process.env);

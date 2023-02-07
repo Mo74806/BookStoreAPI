@@ -6,7 +6,7 @@ const AppError = require('./../utils/appError');
 
 exports.getAllBooks = catchAsync(async (req, res, next) => {
   // EXECUTE QUERY
-  const features = new APIFeatures(Book.find(), req.query)
+  const features = new APIFeatures(Book.find().populate('author'), req.query)
     .filter()
     .sort()
     .limitFields()
@@ -24,7 +24,9 @@ exports.getAllBooks = catchAsync(async (req, res, next) => {
 });
 
 exports.getBook = catchAsync(async (req, res, next) => {
-  const book = await Book.findById(req.params.id);
+  const book = await Book.findById(req.params.id)
+    .populate('reviews')
+    .populate('author');
   if (!book) {
     return next(new AppError('no Book matched this id', 404));
   }
